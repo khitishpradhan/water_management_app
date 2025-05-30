@@ -5,7 +5,7 @@ const baseURL = 'http://localhost:3000';
 
 function AdminPanel() {
   const [users, setUsers] = useState([]);
-  const [form, setForm] = useState({ name: '', email: '' });
+  const [form, setForm] = useState({ name: '', email: '', role: 'resident' });
   const [selectedUser, setSelectedUser] = useState(null);
   const [userUsage, setUserUsage] = useState([]);
   const [invoiceForm, setInvoiceForm] = useState({ month: ''});
@@ -49,7 +49,35 @@ function AdminPanel() {
         <div className="flex gap-2 mt-2">
           <input className="border p-2" placeholder="Name" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} />
           <input className="border p-2" placeholder="Email" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} />
-          <button className="bg-blue-600 text-white px-4 py-2" onClick={createUser}>Create</button>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Role</label>
+            <div className="flex space-x-4">
+              <label className="inline-flex items-center">
+                <input
+                  type="radio"
+                  name="role"
+                  value="resident"
+                  checked={form.role === 'resident'}
+                  onChange={e => setForm({...form, role: e.target.value })}
+                  className="form-radio"
+                />
+                <span className="ml-2">Resident</span>
+              </label>
+
+              <label className="inline-flex items-center">
+                <input
+                  type="radio"
+                  name="role"
+                  value="admin"
+                  checked={form.role === 'admin'}
+                  onChange={e => setForm({...form, role: e.target.value})}
+                  className="form-radio"
+                />
+                <span className="ml-2">Admin</span>
+              </label>
+            </div>
+            <button className="bg-blue-600 text-white px-4 py-2" onClick={createUser}>Create</button>
+          </div>
         </div>
       </div>
 

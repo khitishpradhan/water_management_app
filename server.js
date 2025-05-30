@@ -25,6 +25,11 @@ const sequelize = new Sequelize('water_management', 'root', 'password', {
 const User = sequelize.define('User', {
   name: DataTypes.STRING,
   email: DataTypes.STRING,
+  role: { 
+    type: DataTypes.ENUM('admin', 'resident'),
+    defaultValue: 'resident',
+    allowNull: false,
+  },
   usageLimit: { type: DataTypes.FLOAT, defaultValue: 500 }
 });
 
@@ -68,24 +73,32 @@ app.post('/users', async (req, res) => {
 
 // Log water usage
 app.post('/usage', async (req, res) => {
-  const usage = await WaterUsage.create(req.body);
+  const { UserId, usage, timestamp } = req.body;
 
-  const user = await User.findByPk(req.body.UserId);
-  const now = new Date();
-  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+  const usageTimestamp = timestamp ? new Date(timestamp) : new Date();
+
+  const newUsage = await WaterUsage.create({
+    UserId,
+    usage,
+    timestamp: usageTimestamp
+  });
+
+  const startOfMonth = new Date(usageTimestamp.getFullYear(), usageTimestamp.getMonth(), 1);
 
   const usageThisMonth = await WaterUsage.sum('usage', {
     where: {
-      UserId: req.body.UserId,
+      UserId: UserId,
       timestamp: { [Op.gte]: startOfMonth }
     }
   });
+
+  const user = await User.findByPk(UserId);
 
   if (usageThisMonth > user.usageLimit) {
     console.log(`ALERT: User ${user.name} exceeded water usageLimit.`);
   }
 
-  res.status(201).send(usage);
+  res.status(201).send(newUsage);
 });
 
 // View all usage for a user
