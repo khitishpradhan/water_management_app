@@ -4,6 +4,8 @@ const { Sequelize, DataTypes, Op } = require('sequelize');
 const app = express();
 const port = 3000;
 
+const sendAlertEmail = require('./sendMail');
+
 const ratePerLiter = 5
 // CORS
 app.use((req, res, next) => {
@@ -95,6 +97,7 @@ app.post('/usage', async (req, res) => {
   const user = await User.findByPk(UserId);
 
   if (usageThisMonth > user.usageLimit) {
+    await sendAlertEmail(user.email, user.name, usageThisMonth, user.usageLimit);
     console.log(`ALERT: User ${user.name} exceeded water usageLimit.`);
   }
 
