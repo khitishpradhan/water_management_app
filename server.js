@@ -67,12 +67,14 @@ app.get('/users', async (req, res) => {
     }
 });
 
+// User Routes
 // Create a new user
 app.post('/users', async (req, res) => {
   const user = await User.create(req.body);
   res.status(201).send(user);
 });
 
+// Usage Routes
 // Log water usage
 app.post('/usage', async (req, res) => {
   const { UserId, usage, timestamp } = req.body;
@@ -110,6 +112,50 @@ app.get('/users/:id/usage', async (req, res) => {
   res.send(usage);
 });
 
+// View usage for a user in a given time period
+// GET /users/:id/usage/filter?period=hour|day|month|year
+app.get('/users/:id/usage/filter', async (req, res) => {
+  const { id } = req.params;
+  const { period } = req.query;
+
+  const now = new Date();
+  let start;
+
+  switch (period) {
+    case 'hour':
+      start = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), 0, 0);
+      break;
+    case 'day':
+      start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      break;
+    case 'month':
+      start = new Date(now.getFullYear(), now.getMonth(), 1);
+      break;
+    case 'year':
+      start = new Date(now.getFullYear(), 0, 1);
+      break;
+    default:
+      return res.status(400).send({ error: 'Invalid period. Use hour, day, month, or year.' });
+  }
+
+  try {
+    const usage = await WaterUsage.findAll({
+      where: {
+        UserId: id,
+        timestamp: { [Op.gte]: start }
+      },
+      order: [['timestamp', 'DESC']]
+    });
+    res.send(usage);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ error: 'Server error while filtering usage' });
+  }
+});
+
+
+// Invoice Routes
+// Generate an invoice for a user
 app.post('/users/:id/invoice', async (req, res) => {
     const userId = req.params.id;
     const { month } = req.body; // "2025-05"

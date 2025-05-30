@@ -8,6 +8,8 @@ function AdminPanel() {
   const [form, setForm] = useState({ name: '', email: '', role: 'resident' });
   const [selectedUser, setSelectedUser] = useState(null);
   const [userUsage, setUserUsage] = useState([]);
+  // By default, setting filter to 'all'
+  const [filter, setFilter] = useState('all'); 
   const [invoiceForm, setInvoiceForm] = useState({ month: ''});
   const [invoices, setInvoices] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -23,21 +25,34 @@ function AdminPanel() {
     setForm({ name: '', email: '' });
   };
 
-  const fetchUserUsage = async (id) => {
+  const fetchUserUsage = async (id, period = filter) => {
     setSelectedUser(id);
-    const usageRes = await axios.get(`${baseURL}/users/${id}/usage`);
+    let usageURL = `${baseURL}/users/${id}/usage`;
+  
+    if (period !== 'all') {
+      usageURL = `${baseURL}/users/${id}/usage/filter?period=${period}`;
+    }
+  
+    const usageRes = await axios.get(usageURL);
     setUserUsage(usageRes.data);
-    console.log(usageRes.data);
+  
     const invoiceRes = await axios.get(`${baseURL}/users/${id}/invoices`);
     setInvoices(invoiceRes.data);
-    console.log(invoiceRes.data);
   };
+  
 
   const createInvoice = async () => {
     await axios.post(`${baseURL}/users/${selectedUser}/invoice`, { month: invoiceForm.month });
     fetchUserUsage(selectedUser);
     setInvoiceForm({ month: ''});
   };
+
+  useEffect(() => {
+    if (selectedUser) {
+      fetchUserUsage(selectedUser, filter);
+    }
+  }, [filter]);
+  
 
   return (
     <div className="p-6">
@@ -84,6 +99,18 @@ function AdminPanel() {
       {/* Select & View Usage + Invoices */}
       <div className="mb-6">
         <h3 className="text-xl font-semibold">View User Usage</h3>
+        
+        <div className="mt-4">
+          <label className="mr-2 font-medium">Filter by:</label>
+          <select className="border p-2" value={filter} onChange={e => setFilter(e.target.value)}>
+            <option value="all">All</option>
+            <option value="hour">Last Hour</option>
+            <option value="day">Today</option>
+            <option value="month">This Month</option>
+            <option value="year">This Year</option>
+          </select>
+        </div>
+
         <div className="flex gap-2 mt-2">
           {users.map(u => (
             <button
