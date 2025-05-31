@@ -128,10 +128,24 @@ function AdminPanel() {
       
       {/* Select & View Usage + Invoices */}
       <div className="bg-white shadow-md rounded-lg p-6 mb-8">
+        {/* User List */}
         <h3 className="text-xl font-semibold text-gray-700 mb-4">Users</h3>
 
         <div className="overflow-x-auto">
           <table className="min-w-full border border-gray-200 rounded-lg">
+            <thead>
+              <tr className="bg-gray-50">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
+                  Name
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
+                  Email
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
+                  Role
+                </th>
+              </tr>
+            </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {users.map(u => (
                 <tr
@@ -149,6 +163,26 @@ function AdminPanel() {
                       : 'text-gray-900'
                   }`}>
                     {u.name}
+                  </td>
+                  <td className={`px-6 py-4 whitespace-nowrap text-sm ${
+                    selectedUser === u.id
+                      ? 'text-blue-700'
+                      : 'text-gray-900'
+                  }`}>
+                    {u.email}
+                  </td>
+                  <td className={`px-6 py-4 whitespace-nowrap text-sm ${
+                    selectedUser === u.id
+                      ? 'text-blue-700'
+                      : 'text-gray-900'
+                  }`}>
+                    <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
+                      u.role === 'admin' 
+                        ? 'bg-purple-100 text-purple-800' 
+                        : 'bg-green-100 text-green-800'
+                    }`}>
+                      {u.role}
+                    </span>
                   </td>
                 </tr>
               ))}
