@@ -198,27 +198,41 @@ function AdminPanel() {
           </div>
 
           {/* Create Invoice Section */}
-          <h4 className="text-lg font-semibold mb-2 text-gray-700">Create Invoice</h4>
-          <div className="flex flex-col md:flex-row gap-4 mb-6">
-            <input
-              className="border rounded px-4 py-2 w-full md:w-1/3 focus:ring-2 focus:ring-purple-400 outline-none"
-              type="month"
-              value={invoiceForm.month}
-              onChange={e => setInvoiceForm({ ...invoiceForm, month: e.target.value })}
-            />
-            <input
-              className="border rounded px-4 py-2 w-full md:w-1/3 bg-gray-100 text-gray-600"
-              type="number"
-              placeholder="Rate / L"
-              value="5"
-              disabled
-            />
-            <button
-              className="bg-purple-600 text-white px-5 py-2 rounded hover:bg-purple-700 transition"
-              onClick={createInvoice}
-            >
-              Generate
-            </button>
+          <h4 className="text-lg font-semibold mb-4 text-gray-700">Create Invoice</h4>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Month
+              </label>
+              <input
+                className="border border-gray-200 rounded-lg px-4 py-2 w-full text-sm focus:ring-2 focus:ring-purple-400 focus:border-purple-400 outline-none bg-white"
+                type="month"
+                value={invoiceForm.month}
+                onChange={e => setInvoiceForm({ ...invoiceForm, month: e.target.value })}
+              />
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Rate per Liter
+              </label>
+              <input
+                className="border border-gray-200 rounded-lg px-4 py-2 w-full text-sm bg-gray-50 text-gray-600"
+                type="number"
+                value="5"
+                disabled
+              />
+            </div>
+            
+            <div className="flex flex-col justify-end">
+              <button
+                className="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition text-sm font-medium"
+                onClick={createInvoice}
+              >
+                Generate Invoice
+              </button>
+            </div>
           </div>
 
           {/* All Invoices Section */}
