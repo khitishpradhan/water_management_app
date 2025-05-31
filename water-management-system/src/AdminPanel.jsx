@@ -160,9 +160,10 @@ function AdminPanel() {
 
       {/* Usage & Invoice Section */}
       {selectedUser && (
+        <>
         <div className="bg-white shadow-md rounded-lg p-6">
-        {/* Water Usage Section */}
-        <h4 className="text-lg font-semibold mb-4 text-gray-700">Water Usage</h4>
+          {/* Water Usage Section */}
+          <h4 className="text-lg font-semibold mb-4 text-gray-700">Water Usage</h4>
           
           {/* Filter Section */}
           <div className="mb-4 flex items-center gap-3">
@@ -253,16 +254,21 @@ function AdminPanel() {
             </div>
           </div>
 
-          {/* All Invoices Section */}
-          <h4 className="text-lg font-semibold mb-2 text-gray-700">Invoices</h4>
-          <ul className="text-gray-800">
-            {invoices.map((inv, i) => (
-              <li key={i}>
-                {inv.month}: {inv.totalUsage}L = ₹{inv.amount}
-              </li>
-            ))}
-          </ul>
+
         </div>
+        
+        {/* All Invoices Section */}
+        <div className='bg-white shadow-md rounded-lg p-6 mt-8'>
+          <h4 className="text-lg font-semibold mb-2 text-gray-700">Invoices</h4>
+            <ul className="text-gray-800">
+              {invoices.map((inv, i) => (
+                <li key={i}>
+                  {inv.month}: {inv.totalUsage}L = ₹{inv.amount}
+                </li>
+              ))}
+            </ul>
+        </div>
+        </>
       )}
     </div>
   );
