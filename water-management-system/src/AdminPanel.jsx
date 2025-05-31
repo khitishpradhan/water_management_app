@@ -229,7 +229,7 @@ function AdminPanel() {
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {userUsage.length > 0 ? (
-                  userUsage.map((entry, i) => (
+                  userUsage.map((entry) => (
                     <tr key={entry.id} className="hover:bg-gray-50 transition">
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                         {new Date(entry.timestamp).toLocaleString()}
@@ -311,7 +311,7 @@ function AdminPanel() {
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {invoices.length > 0 ? (
-                  invoices.map((inv, i) => (
+                  invoices.map((inv) => (
                     <tr key={inv.id} className="hover:bg-gray-50 transition">
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                         {inv.month}

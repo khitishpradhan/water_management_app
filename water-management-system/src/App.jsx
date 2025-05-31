@@ -5,7 +5,7 @@ function App() {
 
   // Hardcoding user for now, but this should be fetched from AuthContext or similar
   const user = {
-    id: 1,
+    id: 3,
     name: 'John Doe',
     email: 'johndoe@example.com',
     role: 'resident'
