@@ -9,7 +9,7 @@ function AdminPanel() {
   const [selectedUser, setSelectedUser] = useState(null);
   const [userUsage, setUserUsage] = useState([]);
   const [filter, setFilter] = useState('all');
-  const [invoiceForm, setInvoiceForm] = useState({ month: '' });
+  const [invoiceForm, setInvoiceForm] = useState({ month: new Date().toISOString().slice(0, 7) });
   const [invoices, setInvoices] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
