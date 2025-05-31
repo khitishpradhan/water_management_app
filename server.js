@@ -108,8 +108,16 @@ app.post('/usage', async (req, res) => {
 
 // View all usage for a user
 app.get('/users/:id/usage', async (req, res) => {
-  const usage = await WaterUsage.findAll({ where: { UserId: req.params.id } });
-  res.send(usage);
+  try {
+    const usage = await WaterUsage.findAll({
+      where: { UserId: req.params.id },
+      order: [['timestamp', 'DESC']]
+    });
+    res.send(usage);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ error: 'Server error while fetching usage' });
+  }
 });
 
 // View usage for a user in a given time period

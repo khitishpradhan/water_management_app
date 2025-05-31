@@ -33,6 +33,7 @@ function AdminPanel() {
     }
 
     const usageRes = await axios.get(usageURL);
+    console.log(usageRes.data);
     setUserUsage(usageRes.data);
 
     const invoiceRes = await axios.get(`${baseURL}/users/${id}/invoices`);
@@ -143,13 +144,14 @@ function AdminPanel() {
       {/* Usage & Invoice Section */}
       {selectedUser && (
         <div className="bg-white shadow-md rounded-lg p-6">
-          {/* Water Usage Section */}
-          <h4 className="text-lg font-semibold mb-2 text-gray-700">Water Usage</h4>
+        {/* Water Usage Section */}
+        <h4 className="text-lg font-semibold mb-4 text-gray-700">Water Usage</h4>
+          
           {/* Filter Section */}
-          <div className="mb-4">
-            <label className="mr-2 font-medium text-gray-700">Filter by:</label>
+          <div className="mb-4 flex items-center gap-3">
+            <label className="font-medium text-gray-700">Filter by:</label>
             <select
-              className="border rounded px-4 py-2 focus:ring-2 focus:ring-blue-400 outline-none"
+              className="border border-gray-200 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none bg-white"
               value={filter}
               onChange={e => setFilter(e.target.value)}
             >
@@ -160,13 +162,33 @@ function AdminPanel() {
               <option value="year">This Year</option>
             </select>
           </div>
-          <ul className="list-disc list-inside text-gray-800 mb-6">
-            {userUsage.map((entry, i) => (
-              <li key={i}>
-                {new Date(entry.timestamp).toLocaleString()} - {entry.usage}
-              </li>
-            ))}
-          </ul>
+
+          <div className="overflow-x-auto">
+            <table className="min-w-full border border-gray-200 rounded-lg">
+              <thead>
+                <tr className="bg-gray-50">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
+                    Timestamp
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
+                    Usage
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {userUsage.map((entry, i) => (
+                  <tr key={i} className="hover:bg-gray-50 transition">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {new Date(entry.timestamp).toLocaleString()}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                      {entry.usage}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
 
           {/* Create Invoice Section */}
           <h4 className="text-lg font-semibold mb-2 text-gray-700">Create Invoice</h4>
