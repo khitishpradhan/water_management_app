@@ -33,7 +33,6 @@ function AdminPanel() {
     }
 
     const usageRes = await axios.get(usageURL);
-    console.log(usageRes.data);
     setUserUsage(usageRes.data);
 
     const invoiceRes = await axios.get(`${baseURL}/users/${id}/invoices`);
@@ -176,16 +175,24 @@ function AdminPanel() {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {userUsage.map((entry, i) => (
-                  <tr key={i} className="hover:bg-gray-50 transition">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {new Date(entry.timestamp).toLocaleString()}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                      {entry.usage}
+                {userUsage.length > 0 ? (
+                  userUsage.map((entry, i) => (
+                    <tr key={i} className="hover:bg-gray-50 transition">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        {new Date(entry.timestamp).toLocaleString()}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        {entry.usage}
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="2" className="px-6 py-8 text-center text-sm text-gray-500 bg-gray-50">
+                      No Records Found
                     </td>
                   </tr>
-                ))}
+                )}
               </tbody>
             </table>
           </div>
