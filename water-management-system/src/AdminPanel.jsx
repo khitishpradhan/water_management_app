@@ -217,7 +217,7 @@ function AdminPanel() {
           </div>
 
           {/* Create Invoice Section */}
-          <h4 className="text-lg font-semibold mt-6 text-gray-700">Create Invoice</h4>
+          <h4 className="text-lg font-semibold mt-6 mb-6 text-gray-700">Create Invoice</h4>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
@@ -253,7 +253,7 @@ function AdminPanel() {
               </button>
             </div>
           </div>
-          
+
         </div>
         
         {/* All Invoices Section */}
