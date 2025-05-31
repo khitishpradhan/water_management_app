@@ -1,33 +1,92 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
-function ResidentPanel() {
-  const [users, setUsers] = useState([]);
-  const [usageForm, setUsageForm] = useState({ userId: '', usage: '' });
+const baseURL = 'http://localhost:3000';
+
+function ResidentPanel({ user }) {
+  const [userId, setUserId] = useState(user.id || null);
+  const [userUsage, setUserUsage] = useState([]);
+  const [filter, setFilter] = useState('all');
+  const [invoices, setInvoices] = useState([]); 
+
+  const fetchUserUsage = async (period = filter) => {
+    let usageURL = `${baseURL}/users/${userId}/usage`;
+
+    if (period !== 'all') {
+      usageURL = `${baseURL}/users/${userId}/usage/filter?period=${period}`;
+    }
+
+    const usageRes = await axios.get(usageURL);
+    setUserUsage(usageRes.data);
+
+    const invoiceRes = await axios.get(`${baseURL}/users/${userId}/invoices`);
+    setInvoices(invoiceRes.data);
+  };
 
   useEffect(() => {
-    axios.get('/users').then(res => setUsers(res.data));
-  }, []);
-
-  const logUsage = async () => {
-    await axios.post('/usage', usageForm);
-    setUsageForm({ ...usageForm, usage: '' });
-  };
+    if (userId) {
+      fetchUserUsage(filter);
+    }
+  }, [filter]);
 
   return (
     <div className="p-6">
       <h2 className="text-2xl font-bold mb-4">Resident Panel</h2>
 
-      {/* Log Usage */}
-      <div className="mb-6">
-        <h3 className="text-xl font-semibold">Log Water Usage</h3>
-        <div className="flex gap-2 mt-2">
-          <select className="border p-2" value={usageForm.userId} onChange={e => setUsageForm({ ...usageForm, userId: e.target.value })}>
-            <option value="">Select User</option>
-            {users.map(u => <option key={u.id} value={u.id}>{u.name}</option>)}
+      {/* Usage & Invoice Section */}
+      <div className="bg-white shadow-md rounded-lg p-6">
+        {/* Water Usage Section */}
+        <h4 className="text-lg font-semibold mb-4 text-gray-700">Water Usage</h4>
+        
+        {/* Filter Section */}
+        <div className="mb-4 flex items-center gap-3">
+          <label className="font-medium text-gray-700">Filter by:</label>
+          <select
+            className="border border-gray-200 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none bg-white"
+            value={filter}
+            onChange={e => setFilter(e.target.value)}
+          >
+            <option value="all">All</option>
+            <option value="hour">Last Hour</option>
+            <option value="day">Today</option>
+            <option value="month">This Month</option>
+            <option value="year">This Year</option>
           </select>
-          <input className="border p-2" type="number" placeholder="Usage (liters)" value={usageForm.usage} onChange={e => setUsageForm({ ...usageForm, usage: e.target.value })} />
-          <button className="bg-green-600 text-white px-4 py-2" onClick={logUsage}>Log</button>
+        </div>
+
+        <div className="overflow-x-auto">
+          <table className="min-w-full border border-gray-200 rounded-lg">
+            <thead>
+              <tr className="bg-gray-50">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
+                  Timestamp
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
+                  Usage
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {userUsage.length > 0 ? (
+                userUsage.map((entry, i) => (
+                  <tr key={entry.id} className="hover:bg-gray-50 transition">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {new Date(entry.timestamp).toLocaleString()}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                      {entry.usage}
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="2" className="px-6 py-8 text-center text-sm text-gray-500 bg-gray-50">
+                    No Records Found
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>

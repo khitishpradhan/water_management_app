@@ -2,11 +2,18 @@ import AdminPanel from './AdminPanel';
 import ResidentPanel from './ResidentPanel';
 
 function App() {
-  const role = 'admin'; // or 'resident'
+
+  // Hardcoding user for now, but this should be fetched from AuthContext or similar
+  const user = {
+    id: 1,
+    name: 'John Doe',
+    email: 'johndoe@example.com',
+    role: 'resident'
+  }
 
   return (
     <div className="min-h-screen bg-gray-100">
-      {role === 'admin' ? <AdminPanel /> : <ResidentPanel />}
+      {user.role === 'admin' ? <AdminPanel /> : <ResidentPanel user={user} />}
     </div>
   );
 }
