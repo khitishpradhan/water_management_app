@@ -58,22 +58,37 @@ function AdminPanel() {
       {/* Create User */}
       <div className="bg-white shadow-md rounded-lg p-6 mb-8">
         <h3 className="text-xl font-semibold mb-4 text-gray-700">Add User</h3>
-        <div className="flex flex-col md:flex-row md:items-end gap-4">
-          <input
-            className="border rounded px-4 py-2 w-full md:w-1/3 focus:ring-2 focus:ring-blue-400 outline-none"
-            placeholder="Name"
-            value={form.name}
-            onChange={e => setForm({ ...form, name: e.target.value })}
-          />
-          <input
-            className="border rounded px-4 py-2 w-full md:w-1/3 focus:ring-2 focus:ring-blue-400 outline-none"
-            placeholder="Email"
-            value={form.email}
-            onChange={e => setForm({ ...form, email: e.target.value })}
-          />
+        
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div>
-            <label className="text-sm font-medium text-gray-600 mb-1 block">Role</label>
-            <div className="flex space-x-4 items-center">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Name
+            </label>
+            <input
+              className="border border-gray-200 rounded-lg px-4 py-2 w-full text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none bg-white"
+              placeholder="Enter name"
+              value={form.name}
+              onChange={e => setForm({ ...form, name: e.target.value })}
+            />
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Email
+            </label>
+            <input
+              className="border border-gray-200 rounded-lg px-4 py-2 w-full text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none bg-white"
+              placeholder="Enter email"
+              value={form.email}
+              onChange={e => setForm({ ...form, email: e.target.value })}
+            />
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Role
+            </label>
+            <div className="flex space-x-4 items-center pt-2">
               <label className="inline-flex items-center text-gray-700">
                 <input
                   type="radio"
@@ -83,7 +98,7 @@ function AdminPanel() {
                   onChange={e => setForm({ ...form, role: e.target.value })}
                   className="form-radio text-blue-600"
                 />
-                <span className="ml-2">Resident</span>
+                <span className="ml-2 text-sm">Resident</span>
               </label>
 
               <label className="inline-flex items-center text-gray-700">
@@ -95,19 +110,22 @@ function AdminPanel() {
                   onChange={e => setForm({ ...form, role: e.target.value })}
                   className="form-radio text-blue-600"
                 />
-                <span className="ml-2">Admin</span>
+                <span className="ml-2 text-sm">Admin</span>
               </label>
             </div>
           </div>
-          <button
-            className="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 transition"
-            onClick={createUser}
-          >
-            Create
-          </button>
+          
+          <div className="flex flex-col justify-end">
+            <button
+              className="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition text-sm font-medium"
+              onClick={createUser}
+            >
+              Create User
+            </button>
+          </div>
         </div>
       </div>
-
+      
       {/* Select & View Usage + Invoices */}
       <div className="bg-white shadow-md rounded-lg p-6 mb-8">
         <h3 className="text-xl font-semibold text-gray-700 mb-4">Users</h3>
