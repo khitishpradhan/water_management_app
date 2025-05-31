@@ -42,7 +42,7 @@ function AdminPanel() {
   const createInvoice = async () => {
     await axios.post(`${baseURL}/users/${selectedUser}/invoice`, { month: invoiceForm.month });
     fetchUserUsage(selectedUser);
-    setInvoiceForm({ month: '' });
+    setInvoiceForm({ month: new Date().toISOString().slice(0, 7) });
   };
 
   useEffect(() => {
