@@ -9,6 +9,8 @@ Server:
 MYSQL setup (inside server.js): 
 On the sequelize initialization pass the table_name, username and password of the database you want to use. Change host if needed.
 
+NOTE: Need to populate the "waterusages" table with some dummy data to simulate some features.
+
 sendMail setup(inside sendMail.js):
 On the nodemailer initialization pass the email(user), password, host, PORT of the according to mailer you want to use.
 
