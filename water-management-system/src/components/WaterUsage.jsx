@@ -80,7 +80,7 @@ const WaterUsage = ({ selectedUser }) => {
 		</div>
 
 		{/* Create Invoice Section */}
-		{selectedUser && (
+		{selectedUser && waterUsage.length > 0 && (
 			<>
 				<h4 className="text-lg font-semibold mt-6 mb-6 text-gray-700">Create Invoice</h4>
 				
