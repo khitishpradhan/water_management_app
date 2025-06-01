@@ -3,7 +3,7 @@ import axios from 'axios';
 import Invoices from './components/Invoices';
 import WaterUsage from './components/WaterUsage';
 
-const baseURL = 'http://localhost:3000';
+const baseURL = import.meta.env.VITE_BASE_URL;
 
 function ResidentPanel({ user }) {
   const userId = user.id;

@@ -4,7 +4,8 @@ import axios from 'axios';
 import Invoices from './components/Invoices';
 import WaterUsage from './components/WaterUsage';
 
-const baseURL = 'http://localhost:3000';
+// Use localhost:3000 for development/testing
+const baseURL = import.meta.env.VITE_BASE_URL;
 
 const AdminPanel = () => {
   const [users, setUsers] = useState([]);
