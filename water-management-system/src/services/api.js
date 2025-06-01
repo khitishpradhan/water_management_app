@@ -47,6 +47,17 @@ export const getWaterUsages = async (userId, period) => {
     }
 };
 
+// Invoice APIs
+export const getInvoices = async (userId) => {
+	try {
+			const response = await api.get(`${baseURL}/users/${userId}/invoices`);
+			return response.data;
+	} catch (error) {
+			console.error("Error fetching invoices:", error);
+			throw error;
+	}
+};
+
 export const createInvoice = async (userId, invoiceData) => {
 	try {
 			const response = await api.post(`${baseURL}/users/${userId}/invoice`, invoiceData);

@@ -12,21 +12,24 @@ const AdminPanel = () => {
   const [users, setUsers] = useState([]);
   const [form, setForm] = useState({ name: '', email: '', role: 'resident' });
   const [selectedUser, setSelectedUser] = useState(null);
-  const [invoices, setInvoices] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    getUsers()
-      .then(users => setUsers(users))
-      .catch(error => console.error('Error fetching users:', error));
+    const fetchUsers = async () => {
+      const res = await getUsers();
+      console.log(res)
+      setUsers(res);
+    };
+
+    fetchUsers();
   }, []);
 
-  const registerUser = (e) => {
+  const registerUser = async (e) => {
     e.preventDefault()
 
-    createUser(form)
-    .then(data => setUsers([...users, data]))
-    .catch(error => console.error('Error fetching users:', error));
+    const res = await createUser(form)
+    setUsers([...users, res])
+
   }
 
   return (
@@ -177,9 +180,9 @@ const AdminPanel = () => {
       {/* Usage & Invoice Section */}
       {selectedUser && (
         <>
-        <WaterUsage selectedUser={selectedUser}/>      
+        <WaterUsage selectedUser={selectedUser} />      
         {/* All Invoices Section */}
-        <Invoices headingText={"All Invoices"} invoices={invoices}/>
+        <Invoices headingText={"All Invoices"} selectedUser={selectedUser}/>
 
         </>
       )}

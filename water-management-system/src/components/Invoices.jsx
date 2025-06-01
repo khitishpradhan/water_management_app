@@ -1,6 +1,17 @@
-import React from 'react'
+import { useState, useEffect } from 'react'
+import { getInvoices } from '../services/api';
 
-const Invoices = ({ headingText, invoices }) => {
+const Invoices = ({ headingText, selectedUser }) => {
+  const [invoices, setInvoices] = useState([]);
+
+  useEffect(() => {
+    const fetchInvoices = async () => {
+      const res = await getInvoices(selectedUser);
+      setInvoices(res);
+    };
+    fetchInvoices();
+  }, [selectedUser]);
+
   return (
 			<div className='bg-white shadow-md rounded-lg p-6 mt-8'>
 				<h4 className="text-lg font-semibold mb-4 text-gray-700">{headingText}</h4>
