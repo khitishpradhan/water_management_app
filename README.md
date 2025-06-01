@@ -14,12 +14,12 @@ NOTE: Need to populate the "waterusages" table with some dummy data to simulate 
 sendMail setup(inside sendMail.js):
 On the nodemailer initialization pass the email(user), password, host, PORT of the according to mailer you want to use.
 
-( npm start ) to start the server
+( npm start or npm run dev ) to start the server
 
 Client:
 (npm install) on water-management-system directory
 
-( npm start ) to start the client
+( npm run dev ) to start the client
 
 ## Simulating the app
 
