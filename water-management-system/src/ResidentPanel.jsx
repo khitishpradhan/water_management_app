@@ -36,10 +36,10 @@ function ResidentPanel({ user }) {
       <h2 className="text-2xl font-bold mb-4">Resident Panel</h2>
 
       {/* Usage & Invoice Section */}
-      <WaterUsage userUsage={userUsage} filter={filter} setFilter={setFilter}/>
+      <WaterUsage selectedUser={userId}/>
 
       {/* Invoices Section */}
-      <Invoices headingText ={"Invoices"} invoices={invoices}/>
+      <Invoices headingText ={"Invoices"} selectedUser={userId}/>
 
     </div>
   );
