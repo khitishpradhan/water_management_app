@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react'
-import { fetchWaterUsage } from '../services/api';
-
-const baseURL = import.meta.env.VITE_BASE_URL;
+import { getWaterUsages, createInvoice } from '../services/api';
 
 const WaterUsage = ({ selectedUser }) => {
 
@@ -9,14 +7,17 @@ const WaterUsage = ({ selectedUser }) => {
 	const [filter, setFilter] = useState('all');
   const [invoiceForm, setInvoiceForm] = useState({ month: new Date().toISOString().slice(0, 7) });
 
-	const createInvoice = async () => {
-    await axios.post(`${baseURL}/users/${selectedUser}/invoice`, { month: invoiceForm.month });
+	const createUserInvoice = () => {
+    createInvoice(selectedUser, { month: invoiceForm.month })
+      .then(invoice => {
+        alert(`Invoice created for month ${invoice.month}`);
+      })
     setInvoiceForm({ month: new Date().toISOString().slice(0, 7) });
   };
 
   useEffect(() => {
     if (selectedUser) {
-      fetchWaterUsage(selectedUser, filter)
+      getWaterUsages(selectedUser, filter)
       .then(usage => setWaterUsage(usage))
       .catch(error => console.error('Error fetching usage:', error));
     }
@@ -111,7 +112,7 @@ const WaterUsage = ({ selectedUser }) => {
 					<div className="flex flex-col justify-end">
 						<button
 							className="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition text-sm font-medium"
-							onClick={createInvoice}
+							onClick={createUserInvoice}
 						>
 							Generate Invoice
 						</button>

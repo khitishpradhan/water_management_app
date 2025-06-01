@@ -9,6 +9,17 @@ const api = axios.create({
 
 const baseURL = import.meta.env.VITE_BASE_URL;
 
+// User APIs
+export const createInvoice = async (userId, invoiceData) => {
+    try {
+        const response = await api.post(`${baseURL}/users/${userId}/invoice`, invoiceData);
+        return response.data;
+    } catch (error) {
+        console.error("Error creating invoice:", error);
+        throw error;
+    }
+};
+
 export const getUsers = async () => {
 
     try {
@@ -20,7 +31,7 @@ export const getUsers = async () => {
     }
 }
 
-export const fetchWaterUsage = async (userId, period) => {
+export const getWaterUsages = async (userId, period) => {
     let usageURL = `${baseURL}/users/${userId}/usage`;
 
     if (period !== 'all') {

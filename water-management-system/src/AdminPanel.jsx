@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
-import { getUsers, fetchWaterUsage } from './services/api';
+import { getUsers } from './services/api';
 
 import Invoices from './components/Invoices';
 import WaterUsage from './components/WaterUsage';
