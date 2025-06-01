@@ -112,7 +112,7 @@ const WaterUsage = ({ selectedUser }) => {
 					<div className="flex flex-col justify-end">
 						<button
 							className="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition text-sm font-medium"
-							onClick={createUserInvoice}
+							onClick={() => createUserInvoice()}
 						>
 							Generate Invoice
 						</button>

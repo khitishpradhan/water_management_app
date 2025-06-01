@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 
-import { getUsers } from './services/api';
+import { createUser, getUsers } from './services/api';
 
 import Invoices from './components/Invoices';
 import WaterUsage from './components/WaterUsage';
@@ -22,29 +21,13 @@ const AdminPanel = () => {
       .catch(error => console.error('Error fetching users:', error));
   }, []);
 
-  const createUser = async () => {
-    await axios.post(`${baseURL}/users`, form);
-    const res = await axios.get('/users');
-    setUsers(res.data);
-    setForm({ name: '', email: '', role: 'resident' });
-  };
+  const registerUser = (e) => {
+    e.preventDefault()
 
-  // const fetchUserUsage = async (id, period = filter) => {
-  //   setSelectedUser(id);
-  //   let usageURL = `${baseURL}/users/${id}/usage`;
-
-  //   if (period !== 'all') {
-  //     usageURL = `${baseURL}/users/${id}/usage/filter?period=${period}`;
-  //   }
-
-  //   const usageRes = await axios.get(usageURL);
-  //   setUserUsage(usageRes.data);
-
-  //   const invoiceRes = await axios.get(`${baseURL}/users/${id}/invoices`);
-  //   setInvoices(invoiceRes.data);
-  // };
-
-
+    createUser(form)
+    .then(data => setUsers([...users, data]))
+    .catch(error => console.error('Error fetching users:', error));
+  }
 
   return (
     <div className="p-8 max-w-6xl mx-auto">
@@ -54,72 +37,76 @@ const AdminPanel = () => {
       <div className="bg-white shadow-md rounded-lg p-6 mb-8">
         <h3 className="text-xl font-semibold mb-4 text-gray-700">Add User</h3>
         
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Name
-            </label>
-            <input
-              className="border border-gray-200 rounded-lg px-4 py-2 w-full text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none bg-white"
-              placeholder="Enter name"
-              value={form.name}
-              onChange={e => setForm({ ...form, name: e.target.value })}
-            />
-          </div>
-          
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Email
-            </label>
-            <input
-              className="border border-gray-200 rounded-lg px-4 py-2 w-full text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none bg-white"
-              placeholder="Enter email"
-              value={form.email}
-              onChange={e => setForm({ ...form, email: e.target.value })}
-            />
-          </div>
-          
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Role
-            </label>
-            <div className="flex space-x-4 items-center pt-2">
-              <label className="inline-flex items-center text-gray-700">
-                <input
-                  type="radio"
-                  name="role"
-                  value="resident"
-                  checked={form.role === 'resident'}
-                  onChange={e => setForm({ ...form, role: e.target.value })}
-                  className="form-radio text-blue-600"
-                />
-                <span className="ml-2 text-sm">Resident</span>
+        <form onSubmit={(e) => registerUser(e)}>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Name
               </label>
+              <input
+                className="border border-gray-200 rounded-lg px-4 py-2 w-full text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none bg-white"
+                placeholder="Enter name"
+                value={form.name}
+                onChange={e => setForm({ ...form, name: e.target.value })}
+              />
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Email
+              </label>
+              <input
+                className="border border-gray-200 rounded-lg px-4 py-2 w-full text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none bg-white"
+                placeholder="Enter email"
+                value={form.email}
+                onChange={e => setForm({ ...form, email: e.target.value })}
+              />
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Role
+              </label>
+              <div className="flex space-x-4 items-center pt-2">
+                <label className="inline-flex items-center text-gray-700">
+                  <input
+                    type="radio"
+                    name="role"
+                    value="resident"
+                    checked={form.role === 'resident'}
+                    onChange={e => setForm({ ...form, role: e.target.value })}
+                    className="form-radio text-blue-600"
+                  />
+                  <span className="ml-2 text-sm">Resident</span>
+                </label>
 
-              <label className="inline-flex items-center text-gray-700">
-                <input
-                  type="radio"
-                  name="role"
-                  value="admin"
-                  checked={form.role === 'admin'}
-                  onChange={e => setForm({ ...form, role: e.target.value })}
-                  className="form-radio text-blue-600"
-                />
-                <span className="ml-2 text-sm">Admin</span>
-              </label>
+                <label className="inline-flex items-center text-gray-700">
+                  <input
+                    type="radio"
+                    name="role"
+                    value="admin"
+                    checked={form.role === 'admin'}
+                    onChange={e => setForm({ ...form, role: e.target.value })}
+                    className="form-radio text-blue-600"
+                  />
+                  <span className="ml-2 text-sm">Admin</span>
+                </label>
+              </div>
+            </div>
+            
+            <div className="flex flex-col justify-end">
+              <button
+                className="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition text-sm font-medium"
+                type="submit"
+              >
+                Create User
+              </button>
             </div>
           </div>
-          
-          <div className="flex flex-col justify-end">
-            <button
-              className="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition text-sm font-medium"
-              onClick={createUser}
-            >
-              Create User
-            </button>
-          </div>
-        </div>
+        </form>
+
       </div>
+
       
       {/* Select & View Usage + Invoices */}
       <div className="bg-white shadow-md rounded-lg p-6 mb-8">
@@ -142,7 +129,7 @@ const AdminPanel = () => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {users.map(u => (
+              {users.length > 0 && users?.map(u => (
                 <tr
                   key={u.id}
                   onClick={() => setSelectedUser(u.id)}
