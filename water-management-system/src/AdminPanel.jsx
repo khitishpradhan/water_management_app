@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
+import { getUsers, fetchWaterUsage } from './services/api';
+
 import Invoices from './components/Invoices';
 import WaterUsage from './components/WaterUsage';
 
@@ -11,15 +13,25 @@ const AdminPanel = () => {
   const [users, setUsers] = useState([]);
   const [form, setForm] = useState({ name: '', email: '', role: 'resident' });
   const [selectedUser, setSelectedUser] = useState(null);
-  const [userUsage, setUserUsage] = useState([]);
+  const [waterUsage, setUserUsage] = useState([]);
   const [filter, setFilter] = useState('all');
   const [invoiceForm, setInvoiceForm] = useState({ month: new Date().toISOString().slice(0, 7) });
   const [invoices, setInvoices] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    axios.get(`${baseURL}/users`).then(res => setUsers(res.data));
+    getUsers()
+      .then(users => setUsers(users))
+      .catch(error => console.error('Error fetching users:', error));
   }, []);
+
+  useEffect(() => {
+    if (selectedUser) {
+      fetchWaterUsage(selectedUser, filter)
+      .then(usage => setUserUsage(usage))
+      .catch(error => console.error('Error fetching usage:', error));
+    }
+  }, [selectedUser, filter]);
 
   const createUser = async () => {
     await axios.post(`${baseURL}/users`, form);
@@ -28,32 +40,26 @@ const AdminPanel = () => {
     setForm({ name: '', email: '', role: 'resident' });
   };
 
-  const fetchUserUsage = async (id, period = filter) => {
-    setSelectedUser(id);
-    let usageURL = `${baseURL}/users/${id}/usage`;
+  // const fetchUserUsage = async (id, period = filter) => {
+  //   setSelectedUser(id);
+  //   let usageURL = `${baseURL}/users/${id}/usage`;
 
-    if (period !== 'all') {
-      usageURL = `${baseURL}/users/${id}/usage/filter?period=${period}`;
-    }
+  //   if (period !== 'all') {
+  //     usageURL = `${baseURL}/users/${id}/usage/filter?period=${period}`;
+  //   }
 
-    const usageRes = await axios.get(usageURL);
-    setUserUsage(usageRes.data);
+  //   const usageRes = await axios.get(usageURL);
+  //   setUserUsage(usageRes.data);
 
-    const invoiceRes = await axios.get(`${baseURL}/users/${id}/invoices`);
-    setInvoices(invoiceRes.data);
-  };
+  //   const invoiceRes = await axios.get(`${baseURL}/users/${id}/invoices`);
+  //   setInvoices(invoiceRes.data);
+  // };
 
   const createInvoice = async () => {
     await axios.post(`${baseURL}/users/${selectedUser}/invoice`, { month: invoiceForm.month });
     fetchUserUsage(selectedUser);
     setInvoiceForm({ month: new Date().toISOString().slice(0, 7) });
   };
-
-  useEffect(() => {
-    if (selectedUser) {
-      fetchUserUsage(selectedUser, filter);
-    }
-  }, [filter]);
 
   return (
     <div className="p-8 max-w-6xl mx-auto">
@@ -154,7 +160,7 @@ const AdminPanel = () => {
               {users.map(u => (
                 <tr
                   key={u.id}
-                  onClick={() => fetchUserUsage(u.id)}
+                  onClick={() => setSelectedUser(u.id)}
                   className={`cursor-pointer transition ${
                     selectedUser === u.id
                       ? 'bg-blue-50 hover:bg-blue-100'
@@ -199,7 +205,7 @@ const AdminPanel = () => {
       {/* Usage & Invoice Section */}
       {selectedUser && (
         <>
-        <WaterUsage userUsage={userUsage} invoiceForm={invoiceForm} setInvoiceForm={setInvoiceForm} filter={filter} createInvoice={createInvoice} setFilter={setFilter}/>      
+        <WaterUsage waterUsage={waterUsage} invoiceForm={invoiceForm} setInvoiceForm={setInvoiceForm} filter={filter} createInvoice={createInvoice} setFilter={setFilter}/>      
         {/* All Invoices Section */}
         <Invoices headingText={"All Invoices"} invoices={invoices}/>
 

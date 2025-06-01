@@ -1,6 +1,6 @@
 import React from 'react'
 
-const WaterUsage = ({ userUsage, invoiceForm, setInvoiceForm, filter, setFilter, createInvoice }) => {
+const WaterUsage = ({ waterUsage, invoiceForm, setInvoiceForm, filter, setFilter, createInvoice }) => {
 
 	const showInvoiceSection = invoiceForm && setInvoiceForm && createInvoice;
 
@@ -39,8 +39,8 @@ const WaterUsage = ({ userUsage, invoiceForm, setInvoiceForm, filter, setFilter,
 					</tr>
 				</thead>
 				<tbody className="bg-white divide-y divide-gray-200">
-					{userUsage.length > 0 ? (
-						userUsage.map((entry) => (
+					{waterUsage.length > 0 ? (
+						waterUsage.map((entry) => (
 							<tr key={entry.id} className="hover:bg-gray-50 transition">
 								<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
 									{new Date(entry.timestamp).toLocaleString()}

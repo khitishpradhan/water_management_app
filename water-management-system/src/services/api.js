@@ -1,0 +1,39 @@
+import axios from "axios";
+
+const api = axios.create({
+    baseURL: import.meta.env.VITE_BASE_URL,
+    headers: {
+        "Content-Type": "application/json",
+    },
+});
+
+const baseURL = import.meta.env.VITE_BASE_URL;
+
+export const getUsers = async () => {
+
+    try {
+        const response = await api.get(`${baseURL}/users`);
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching users:", error);
+        throw error;
+    }
+}
+
+export const fetchWaterUsage = async (userId, period) => {
+
+    console.log("period", period);
+    let usageURL = `${baseURL}/users/${userId}/usage`;
+
+    if (period !== 'all') {
+      usageURL = `${baseURL}/users/${userId}/usage/filter?period=${period}`;
+    }
+
+    try {
+        const response = await api.get(usageURL);
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching water usage:", error);
+        throw error;
+    }
+};
