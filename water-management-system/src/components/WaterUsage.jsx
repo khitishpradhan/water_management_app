@@ -1,9 +1,26 @@
-import React from 'react'
+import { useEffect, useState } from 'react'
+import { fetchWaterUsage } from '../services/api';
 
-const WaterUsage = ({ waterUsage, invoiceForm, setInvoiceForm, filter, setFilter, createInvoice }) => {
+const baseURL = import.meta.env.VITE_BASE_URL;
 
-	const showInvoiceSection = invoiceForm && setInvoiceForm && createInvoice;
+const WaterUsage = ({ selectedUser }) => {
 
+  const [waterUsage, setWaterUsage] = useState([]);
+	const [filter, setFilter] = useState('all');
+  const [invoiceForm, setInvoiceForm] = useState({ month: new Date().toISOString().slice(0, 7) });
+
+	const createInvoice = async () => {
+    await axios.post(`${baseURL}/users/${selectedUser}/invoice`, { month: invoiceForm.month });
+    setInvoiceForm({ month: new Date().toISOString().slice(0, 7) });
+  };
+
+  useEffect(() => {
+    if (selectedUser) {
+      fetchWaterUsage(selectedUser, filter)
+      .then(usage => setWaterUsage(usage))
+      .catch(error => console.error('Error fetching usage:', error));
+    }
+  }, [selectedUser, filter]);
 
   return (
 	<div className="bg-white shadow-md rounded-lg p-6">
@@ -62,7 +79,7 @@ const WaterUsage = ({ waterUsage, invoiceForm, setInvoiceForm, filter, setFilter
 		</div>
 
 		{/* Create Invoice Section */}
-		{showInvoiceSection && (
+		{selectedUser && (
 			<>
 				<h4 className="text-lg font-semibold mt-6 mb-6 text-gray-700">Create Invoice</h4>
 				

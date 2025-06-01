@@ -13,9 +13,6 @@ const AdminPanel = () => {
   const [users, setUsers] = useState([]);
   const [form, setForm] = useState({ name: '', email: '', role: 'resident' });
   const [selectedUser, setSelectedUser] = useState(null);
-  const [waterUsage, setUserUsage] = useState([]);
-  const [filter, setFilter] = useState('all');
-  const [invoiceForm, setInvoiceForm] = useState({ month: new Date().toISOString().slice(0, 7) });
   const [invoices, setInvoices] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -24,14 +21,6 @@ const AdminPanel = () => {
       .then(users => setUsers(users))
       .catch(error => console.error('Error fetching users:', error));
   }, []);
-
-  useEffect(() => {
-    if (selectedUser) {
-      fetchWaterUsage(selectedUser, filter)
-      .then(usage => setUserUsage(usage))
-      .catch(error => console.error('Error fetching usage:', error));
-    }
-  }, [selectedUser, filter]);
 
   const createUser = async () => {
     await axios.post(`${baseURL}/users`, form);
@@ -55,11 +44,7 @@ const AdminPanel = () => {
   //   setInvoices(invoiceRes.data);
   // };
 
-  const createInvoice = async () => {
-    await axios.post(`${baseURL}/users/${selectedUser}/invoice`, { month: invoiceForm.month });
-    fetchUserUsage(selectedUser);
-    setInvoiceForm({ month: new Date().toISOString().slice(0, 7) });
-  };
+
 
   return (
     <div className="p-8 max-w-6xl mx-auto">
@@ -205,7 +190,7 @@ const AdminPanel = () => {
       {/* Usage & Invoice Section */}
       {selectedUser && (
         <>
-        <WaterUsage waterUsage={waterUsage} invoiceForm={invoiceForm} setInvoiceForm={setInvoiceForm} filter={filter} createInvoice={createInvoice} setFilter={setFilter}/>      
+        <WaterUsage selectedUser={selectedUser}/>      
         {/* All Invoices Section */}
         <Invoices headingText={"All Invoices"} invoices={invoices}/>
 

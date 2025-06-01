@@ -21,8 +21,6 @@ export const getUsers = async () => {
 }
 
 export const fetchWaterUsage = async (userId, period) => {
-
-    console.log("period", period);
     let usageURL = `${baseURL}/users/${userId}/usage`;
 
     if (period !== 'all') {
