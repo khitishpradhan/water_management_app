@@ -199,7 +199,7 @@ const AdminPanel = () => {
       {/* Usage & Invoice Section */}
       {selectedUser && (
         <>
-        <WaterUsage userUsage={userUsage} invoiceForm={invoiceForm} filter={filter} createInvoice={createInvoice} setFilter={setFilter}/>      
+        <WaterUsage userUsage={userUsage} invoiceForm={invoiceForm} setInvoiceForm={setInvoiceForm} filter={filter} createInvoice={createInvoice} setFilter={setFilter}/>      
         {/* All Invoices Section */}
         <Invoices headingText={"All Invoices"} invoices={invoices}/>
 
